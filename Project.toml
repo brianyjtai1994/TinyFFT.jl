@@ -1,0 +1,4 @@
+name = "TinyFFT"
+uuid = "4c485984-08a4-4805-a31a-4ac085ba158c"
+authors = ["brianyjtai1994 <brianyjtai1994@gmail.com>"]
+version = "0.1.0"
