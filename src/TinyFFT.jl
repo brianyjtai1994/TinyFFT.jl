@@ -9,9 +9,23 @@ const MatO  = AbstractMatrix # Output Matrix
 const MatB  = AbstractMatrix # Buffer Matrix
 const MatIO = AbstractMatrix # In/Out Matrix
 
-export fft, fft!
+export fft, fft!, clp2
 
+#### ceiling `x` to a power-of-2 integer
 function clp2(x::Int)
+    x == 0 && return 1
+    x == 1 && return 2
+    x = x - 1
+    x = x | (x >> 1)
+    x = x | (x >> 2)
+    x = x | (x >> 4)
+    x = x | (x >> 8)
+    x = x | (x >> 16)
+    return x + 1
+end
+
+## power of radix 2 (flooring mode)
+function por2(x::Int)
     x == 0 && error("_log2(x): x cannot be zero!")
     r = 0
     x > 4294967295 && (x >>= 32; r += 32)
@@ -161,7 +175,7 @@ function fft!(o::FFT, sig::VecI, timestep::Real; unwrap::Bool=false)
     N = length(toN)
     H = N >> 1
 
-    if isone(clp2(N) & 1)
+    if isone(por2(N) & 1)
         @inbounds for i in toN
             crθ[i,1] = sig[i]
             crθ[i,2] = 0.0
